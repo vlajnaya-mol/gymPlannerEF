@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GymPlannerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Day_Workout">
+          <Key>
+            <PropertyRef Name="ID_Day" />
+            <PropertyRef Name="ID_Workout" />
+          </Key>
+          <Property Name="ID_Day" Type="int" Nullable="false" />
+          <Property Name="ID_Workout" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Days">
+          <Key>
+            <PropertyRef Name="ID_Day" />
+          </Key>
+          <Property Name="ID_Day" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exercise_MuscleGroup">
+          <Key>
+            <PropertyRef Name="Name_Exercise" />
+            <PropertyRef Name="Name_MuscleGroup" />
+          </Key>
+          <Property Name="Name_Exercise" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name_MuscleGroup" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exercises">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Information" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MuscleGroups">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Information" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sets">
+          <Key>
+            <PropertyRef Name="ID_Set" />
+          </Key>
+          <Property Name="ID_Set" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Num_Reps" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="numeric" Precision="4" Scale="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_Day">
+          <Key>
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="ID_Day" />
+          </Key>
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID_Day" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Login" />
+          </Key>
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workout_Exercise">
+          <Key>
+            <PropertyRef Name="Name_Exercise" />
+            <PropertyRef Name="ID_Workout" />
+          </Key>
+          <Property Name="Name_Exercise" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID_Workout" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workout_Set">
+          <Key>
+            <PropertyRef Name="ID_Workout" />
+            <PropertyRef Name="ID_Set" />
+          </Key>
+          <Property Name="ID_Workout" Type="int" Nullable="false" />
+          <Property Name="ID_Set" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workouts">
+          <Key>
+            <PropertyRef Name="ID_Workout" />
+          </Key>
+          <Property Name="ID_Workout" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Num_Sets" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Day_Workout_Days">
+          <End Role="Days" Type="Self.Days" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Day_Workout" Type="Self.Day_Workout" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="ID_Day" />
+            </Principal>
+            <Dependent Role="Day_Workout">
+              <PropertyRef Name="ID_Day" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Day_Workout_Workouts">
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Day_Workout" Type="Self.Day_Workout" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workouts">
+              <PropertyRef Name="ID_Workout" />
+            </Principal>
+            <Dependent Role="Day_Workout">
+              <PropertyRef Name="ID_Workout" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exercise_MuscleGroup_Exercises">
+          <End Role="Exercises" Type="Self.Exercises" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Exercise_MuscleGroup" Type="Self.Exercise_MuscleGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exercises">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Exercise_MuscleGroup">
+              <PropertyRef Name="Name_Exercise" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exercise_MuscleGroup_MuscleGroups">
+          <End Role="MuscleGroups" Type="Self.MuscleGroups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Exercise_MuscleGroup" Type="Self.Exercise_MuscleGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MuscleGroups">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Exercise_MuscleGroup">
+              <PropertyRef Name="Name_MuscleGroup" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Day_Days">
+          <End Role="Days" Type="Self.Days" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="User_Day" Type="Self.User_Day" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="ID_Day" />
+            </Principal>
+            <Dependent Role="User_Day">
+              <PropertyRef Name="ID_Day" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Day_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="User_Day" Type="Self.User_Day" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Login" />
+            </Principal>
+            <Dependent Role="User_Day">
+              <PropertyRef Name="Login" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Workout_Exercise_Exercises">
+          <End Role="Exercises" Type="Self.Exercises" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Workout_Exercise" Type="Self.Workout_Exercise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exercises">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Workout_Exercise">
+              <PropertyRef Name="Name_Exercise" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Workout_Exercise_Workouts">
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Workout_Exercise" Type="Self.Workout_Exercise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workouts">
+              <PropertyRef Name="ID_Workout" />
+            </Principal>
+            <Dependent Role="Workout_Exercise">
+              <PropertyRef Name="ID_Workout" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Workout_Set_Sets">
+          <End Role="Sets" Type="Self.Sets" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Workout_Set" Type="Self.Workout_Set" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sets">
+              <PropertyRef Name="ID_Set" />
+            </Principal>
+            <Dependent Role="Workout_Set">
+              <PropertyRef Name="ID_Set" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Workout_Set_Workouts">
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Workout_Set" Type="Self.Workout_Set" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workouts">
+              <PropertyRef Name="ID_Workout" />
+            </Principal>
+            <Dependent Role="Workout_Set">
+              <PropertyRef Name="ID_Workout" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GymPlannerModelStoreContainer">
+          <EntitySet Name="Day_Workout" EntityType="Self.Day_Workout" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exercise_MuscleGroup" EntityType="Self.Exercise_MuscleGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exercises" EntityType="Self.Exercises" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MuscleGroups" EntityType="Self.MuscleGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sets" EntityType="Self.Sets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Day" EntityType="Self.User_Day" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workout_Exercise" EntityType="Self.Workout_Exercise" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workout_Set" EntityType="Self.Workout_Set" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workouts" EntityType="Self.Workouts" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Day_Workout_Days" Association="Self.FK_Day_Workout_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Day_Workout" EntitySet="Day_Workout" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Day_Workout_Workouts" Association="Self.FK_Day_Workout_Workouts">
+            <End Role="Workouts" EntitySet="Workouts" />
+            <End Role="Day_Workout" EntitySet="Day_Workout" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exercise_MuscleGroup_Exercises" Association="Self.FK_Exercise_MuscleGroup_Exercises">
+            <End Role="Exercises" EntitySet="Exercises" />
+            <End Role="Exercise_MuscleGroup" EntitySet="Exercise_MuscleGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exercise_MuscleGroup_MuscleGroups" Association="Self.FK_Exercise_MuscleGroup_MuscleGroups">
+            <End Role="MuscleGroups" EntitySet="MuscleGroups" />
+            <End Role="Exercise_MuscleGroup" EntitySet="Exercise_MuscleGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Day_Days" Association="Self.FK_User_Day_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="User_Day" EntitySet="User_Day" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Day_Users" Association="Self.FK_User_Day_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="User_Day" EntitySet="User_Day" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Workout_Exercise_Exercises" Association="Self.FK_Workout_Exercise_Exercises">
+            <End Role="Exercises" EntitySet="Exercises" />
+            <End Role="Workout_Exercise" EntitySet="Workout_Exercise" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Workout_Exercise_Workouts" Association="Self.FK_Workout_Exercise_Workouts">
+            <End Role="Workouts" EntitySet="Workouts" />
+            <End Role="Workout_Exercise" EntitySet="Workout_Exercise" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Workout_Set_Sets" Association="Self.FK_Workout_Set_Sets">
+            <End Role="Sets" EntitySet="Sets" />
+            <End Role="Workout_Set" EntitySet="Workout_Set" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Workout_Set_Workouts" Association="Self.FK_Workout_Set_Workouts">
+            <End Role="Workouts" EntitySet="Workouts" />
+            <End Role="Workout_Set" EntitySet="Workout_Set" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GymPlannerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Days">
+          <Key>
+            <PropertyRef Name="ID_Day" />
+          </Key>
+          <Property Name="ID_Day" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Workouts" Relationship="Self.Day_Workout" FromRole="Days" ToRole="Workouts" />
+          <NavigationProperty Name="Users" Relationship="Self.User_Day" FromRole="Days" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Exercises">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Information" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="MuscleGroups" Relationship="Self.Exercise_MuscleGroup" FromRole="Exercises" ToRole="MuscleGroups" />
+          <NavigationProperty Name="Workouts" Relationship="Self.Workout_Exercise" FromRole="Exercises" ToRole="Workouts" />
+        </EntityType>
+        <EntityType Name="MuscleGroups">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Information" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Exercises" Relationship="Self.Exercise_MuscleGroup" FromRole="MuscleGroups" ToRole="Exercises" />
+        </EntityType>
+        <EntityType Name="Sets">
+          <Key>
+            <PropertyRef Name="ID_Set" />
+          </Key>
+          <Property Name="ID_Set" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Num_Reps" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Precision="4" Scale="1" Nullable="false" />
+          <NavigationProperty Name="Workouts" Relationship="Self.Workout_Set" FromRole="Sets" ToRole="Workouts" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Login" />
+          </Key>
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Days" Relationship="Self.User_Day" FromRole="Users" ToRole="Days" />
+        </EntityType>
+        <EntityType Name="Workouts">
+          <Key>
+            <PropertyRef Name="ID_Workout" />
+          </Key>
+          <Property Name="ID_Workout" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Num_Sets" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Days" Relationship="Self.Day_Workout" FromRole="Workouts" ToRole="Days" />
+          <NavigationProperty Name="Exercises" Relationship="Self.Workout_Exercise" FromRole="Workouts" ToRole="Exercises" />
+          <NavigationProperty Name="Sets" Relationship="Self.Workout_Set" FromRole="Workouts" ToRole="Sets" />
+        </EntityType>
+        <Association Name="Day_Workout">
+          <End Role="Days" Type="Self.Days" Multiplicity="*" />
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="*" />
+        </Association>
+        <Association Name="Exercise_MuscleGroup">
+          <End Role="Exercises" Type="Self.Exercises" Multiplicity="*" />
+          <End Role="MuscleGroups" Type="Self.MuscleGroups" Multiplicity="*" />
+        </Association>
+        <Association Name="User_Day">
+          <End Role="Days" Type="Self.Days" Multiplicity="*" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+        </Association>
+        <Association Name="Workout_Exercise">
+          <End Role="Exercises" Type="Self.Exercises" Multiplicity="*" />
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="*" />
+        </Association>
+        <Association Name="Workout_Set">
+          <End Role="Sets" Type="Self.Sets" Multiplicity="*" />
+          <End Role="Workouts" Type="Self.Workouts" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="NewGymPlannerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Days" EntityType="Self.Days" />
+          <EntitySet Name="Exercises" EntityType="Self.Exercises" />
+          <EntitySet Name="MuscleGroups" EntityType="Self.MuscleGroups" />
+          <EntitySet Name="Sets" EntityType="Self.Sets" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Workouts" EntityType="Self.Workouts" />
+          <AssociationSet Name="Day_Workout" Association="Self.Day_Workout">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Workouts" EntitySet="Workouts" />
+          </AssociationSet>
+          <AssociationSet Name="Exercise_MuscleGroup" Association="Self.Exercise_MuscleGroup">
+            <End Role="Exercises" EntitySet="Exercises" />
+            <End Role="MuscleGroups" EntitySet="MuscleGroups" />
+          </AssociationSet>
+          <AssociationSet Name="User_Day" Association="Self.User_Day">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="Workout_Exercise" Association="Self.Workout_Exercise">
+            <End Role="Exercises" EntitySet="Exercises" />
+            <End Role="Workouts" EntitySet="Workouts" />
+          </AssociationSet>
+          <AssociationSet Name="Workout_Set" Association="Self.Workout_Set">
+            <End Role="Sets" EntitySet="Sets" />
+            <End Role="Workouts" EntitySet="Workouts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GymPlannerModelStoreContainer" CdmEntityContainer="NewGymPlannerEntities">
+          <EntitySetMapping Name="Days">
+            <EntityTypeMapping TypeName="GymPlannerModel.Days">
+              <MappingFragment StoreEntitySet="Days">
+                <ScalarProperty Name="ID_Day" ColumnName="ID_Day" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exercises">
+            <EntityTypeMapping TypeName="GymPlannerModel.Exercises">
+              <MappingFragment StoreEntitySet="Exercises">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MuscleGroups">
+            <EntityTypeMapping TypeName="GymPlannerModel.MuscleGroups">
+              <MappingFragment StoreEntitySet="MuscleGroups">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sets">
+            <EntityTypeMapping TypeName="GymPlannerModel.Sets">
+              <MappingFragment StoreEntitySet="Sets">
+                <ScalarProperty Name="ID_Set" ColumnName="ID_Set" />
+                <ScalarProperty Name="Num_Reps" ColumnName="Num_Reps" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="GymPlannerModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Workouts">
+            <EntityTypeMapping TypeName="GymPlannerModel.Workouts">
+              <MappingFragment StoreEntitySet="Workouts">
+                <ScalarProperty Name="ID_Workout" ColumnName="ID_Workout" />
+                <ScalarProperty Name="Num_Sets" ColumnName="Num_Sets" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Day_Workout" TypeName="GymPlannerModel.Day_Workout" StoreEntitySet="Day_Workout">
+            <EndProperty Name="Days">
+              <ScalarProperty Name="ID_Day" ColumnName="ID_Day" />
+            </EndProperty>
+            <EndProperty Name="Workouts">
+              <ScalarProperty Name="ID_Workout" ColumnName="ID_Workout" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Exercise_MuscleGroup" TypeName="GymPlannerModel.Exercise_MuscleGroup" StoreEntitySet="Exercise_MuscleGroup">
+            <EndProperty Name="Exercises">
+              <ScalarProperty Name="Name" ColumnName="Name_Exercise" />
+            </EndProperty>
+            <EndProperty Name="MuscleGroups">
+              <ScalarProperty Name="Name" ColumnName="Name_MuscleGroup" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="User_Day" TypeName="GymPlannerModel.User_Day" StoreEntitySet="User_Day">
+            <EndProperty Name="Days">
+              <ScalarProperty Name="ID_Day" ColumnName="ID_Day" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="Login" ColumnName="Login" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Workout_Exercise" TypeName="GymPlannerModel.Workout_Exercise" StoreEntitySet="Workout_Exercise">
+            <EndProperty Name="Exercises">
+              <ScalarProperty Name="Name" ColumnName="Name_Exercise" />
+            </EndProperty>
+            <EndProperty Name="Workouts">
+              <ScalarProperty Name="ID_Workout" ColumnName="ID_Workout" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Workout_Set" TypeName="GymPlannerModel.Workout_Set" StoreEntitySet="Workout_Set">
+            <EndProperty Name="Sets">
+              <ScalarProperty Name="ID_Set" ColumnName="ID_Set" />
+            </EndProperty>
+            <EndProperty Name="Workouts">
+              <ScalarProperty Name="ID_Workout" ColumnName="ID_Workout" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
