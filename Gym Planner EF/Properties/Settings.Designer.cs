@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gym_Planner_EF_EF.Properties
+namespace Gym_Planner_EF.Properties
 {
 
 
