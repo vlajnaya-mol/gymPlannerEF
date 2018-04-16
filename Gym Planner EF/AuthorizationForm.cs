@@ -30,6 +30,9 @@ namespace Gym_Planner_EF
 
         private void SignInButton_Click(object sender, EventArgs e)
         {
+            MainForm mainForm = new MainForm(new User("admin", "admin", "admin"));
+            mainForm.Show();
+            this.Hide();
             //if (QueryAdapter.CheckUserExists(LoginTextBox.Text, PassTextBox.Text) == 1)
             //{
             //    User user = new User(this.LoginTextBox.Text, this.PassTextBox.Text, "TODO");

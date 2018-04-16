@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.Entity;
 
 namespace Gym_Planner_EF
 {
     public partial class MainForm : Form
     {
         private User user;
+        private Gym_Planner_EF.NewGymPlannerEntities ctx;
         //NewGymPlannerDataSetTableAdapters.QueryAdapter queryAdapter;
         //NewGymPlannerDataSetTableAdapters.FindDaysTableAdapter findDays;
         //NewGymPlannerDataSetTableAdapters.DaysTableAdapter daysAdapter;
@@ -30,6 +32,10 @@ namespace Gym_Planner_EF
             else
                 ExercisesMenuStrip.Visible = false;
 
+            this.ctx = new Gym_Planner_EF.NewGymPlannerEntities();
+
+            this.ctx.Exercises.Load();
+            this.exercisesBindingSource1.DataSource = this.ctx.Exercises.Local.ToBindingList();
             //DataTable muscleDT = (new NewGymPlannerDataSetTableAdapters.MuscleGroupsTableAdapter()).GetData();
             //this.MuscleGroupToolStripComboBox.ComboBox.DisplayMember = muscleDT.Columns[0].ToString();
             //this.MuscleGroupToolStripComboBox.ComboBox.ValueMember = muscleDT.Columns[0].ToString();
