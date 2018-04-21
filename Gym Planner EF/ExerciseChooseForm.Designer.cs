@@ -28,17 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ExerciseNameTextBox = new System.Windows.Forms.TextBox();
             this.GetExerciseButton = new System.Windows.Forms.Button();
             this.ExerciseNameLabel = new System.Windows.Forms.Label();
             this.ExerciseFindLabel = new System.Windows.Forms.Label();
             this.ExercisesListBox = new System.Windows.Forms.ListBox();
+            this.exercisesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
-            // ExerciseNameTExtBox
+            // ExerciseNameTextBox
             // 
             this.ExerciseNameTextBox.Location = new System.Drawing.Point(15, 37);
-            this.ExerciseNameTextBox.Name = "ExerciseNameTExtBox";
+            this.ExerciseNameTextBox.Name = "ExerciseNameTextBox";
             this.ExerciseNameTextBox.Size = new System.Drawing.Size(262, 22);
             this.ExerciseNameTextBox.TabIndex = 0;
             this.ExerciseNameTextBox.TextChanged += new System.EventHandler(this.ExerciseNameTExtBox_TextChanged);
@@ -82,6 +85,10 @@
             this.ExercisesListBox.Size = new System.Drawing.Size(402, 340);
             this.ExercisesListBox.TabIndex = 5;
             // 
+            // exercisesBindingSource
+            // 
+            this.exercisesBindingSource.DataSource = typeof(Gym_Planner_EF.Exercises);
+            // 
             // ExerciseChooseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -94,6 +101,7 @@
             this.Controls.Add(this.ExerciseNameTextBox);
             this.Name = "ExerciseChooseForm";
             this.Text = "Вибір вправи";
+            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,5 +114,6 @@
         private System.Windows.Forms.Label ExerciseNameLabel;
         private System.Windows.Forms.Label ExerciseFindLabel;
         private System.Windows.Forms.ListBox ExercisesListBox;
+        private System.Windows.Forms.BindingSource exercisesBindingSource;
     }
 }

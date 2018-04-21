@@ -35,13 +35,6 @@ namespace Gym_Planner_EF
             {
                 MessageBox.Show("Користувач з таким логіном уже існує");
             }
-            //if (QueryAdapter.CheckLoginExists(LoginTextBox.Text) == 0)
-            //{
-            //    newGymPlannerDataSet.Users.AddUsersRow(LoginTextBox.Text, PassTextBox.Text, NameTextBox.Text);
-            //    usersTableAdapter.Update(newGymPlannerDataSet);
-            //    this.Close();
-            //}
-            //else { MessageBox.Show("Користувач з таким логіном уже існує"); }
         }
 
         private void NewAccountForm_FormClosing(object sender, FormClosingEventArgs e)

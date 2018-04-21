@@ -57,11 +57,6 @@
             this.ExercisesTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ExerciseInfoLabel = new System.Windows.Forms.Label();
             this.ExercisesDataGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.exercisesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ExercisesMenuStrip = new System.Windows.Forms.MenuStrip();
             this.AddNewExerciseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RemoveExerciseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,6 +65,11 @@
             this.ChooseExToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MuscleGroupToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.linkLabelLogout = new System.Windows.Forms.LinkLabel();
+            this.exercisesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MainTableLayout.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.CalendarTab.SuspendLayout();
@@ -80,10 +80,10 @@
             this.ExercisesTab.SuspendLayout();
             this.ExercisesTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExercisesDataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).BeginInit();
             this.ExercisesMenuStrip.SuspendLayout();
             this.StatTab.SuspendLayout();
             this.StatMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // MainTableLayout
@@ -396,38 +396,6 @@
             this.ExercisesDataGridView.TabIndex = 2;
             this.ExercisesDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ExercisesDataGridView_CellClick);
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Information";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Information";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "MuscleGroups";
-            this.dataGridViewTextBoxColumn3.HeaderText = "MuscleGroups";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "Workouts";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Workouts";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            // 
-            // exercisesBindingSource
-            // 
-            this.exercisesBindingSource.DataSource = typeof(Gym_Planner_EF.Exercises);
-            // 
             // ExercisesMenuStrip
             // 
             this.ExercisesMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -503,6 +471,41 @@
             this.linkLabelLogout.Text = "Змінити користувача";
             this.linkLabelLogout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLogout_LinkClicked);
             // 
+            // exercisesBindingSource
+            // 
+            this.exercisesBindingSource.DataSource = typeof(Gym_Planner_EF.Exercises);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Назва вправи";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Information";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Information";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "MuscleGroups";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Група м\'язів";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Workouts";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Workouts";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -529,13 +532,13 @@
             this.ExercisesTableLayoutPanel.ResumeLayout(false);
             this.ExercisesTableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExercisesDataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).EndInit();
             this.ExercisesMenuStrip.ResumeLayout(false);
             this.ExercisesMenuStrip.PerformLayout();
             this.StatTab.ResumeLayout(false);
             this.StatTab.PerformLayout();
             this.StatMenuStrip.ResumeLayout(false);
             this.StatMenuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -587,10 +590,10 @@
         private System.Windows.Forms.Button GetExerciseButton;
         private System.Windows.Forms.Label ExerciseLabel;
         private System.Windows.Forms.ListBox DayListBox;
+        private System.Windows.Forms.BindingSource exercisesBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.BindingSource exercisesBindingSource;
     }
 }
