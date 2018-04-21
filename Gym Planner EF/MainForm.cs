@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,45 +13,43 @@ namespace Gym_Planner_EF
 {
     public partial class MainForm : Form
     {
+        private NewGymPlannerEntities ctx;
         private User user;
-        //NewGymPlannerDataSetTableAdapters.QueryAdapter queryAdapter;
-        //NewGymPlannerDataSetTableAdapters.FindDaysTableAdapter findDays;
-        //NewGymPlannerDataSetTableAdapters.DaysTableAdapter daysAdapter;
-        //NewGymPlannerDataSetTableAdapters.User_DayTableAdapter userDayAdapter;
         public MainForm(User user)
         {
             this.user = user;
             InitializeComponent();
-            //queryAdapter = new NewGymPlannerDataSetTableAdapters.QueryAdapter();
-            //findDays = new NewGymPlannerDataSetTableAdapters.FindDaysTableAdapter();
-            //daysAdapter = new NewGymPlannerDataSetTableAdapters.DaysTableAdapter();
-            //userDayAdapter = new NewGymPlannerDataSetTableAdapters.User_DayTableAdapter();
             if (this.user.isAdmin())
                 ExercisesMenuStrip.Visible = true;
             else
                 ExercisesMenuStrip.Visible = false;
+            this.ctx = new NewGymPlannerEntities();
+            this.ctx.Exercises.Load();
+            this.exercisesBindingSource.DataSource = this.ctx.Exercises.Local.ToBindingList();
+            MuscleGroupToolStripComboBox.ComboBox.DataSource = ctx.MuscleGroups.Select(g => g.Name).ToList();
 
-            //DataTable muscleDT = (new NewGymPlannerDataSetTableAdapters.MuscleGroupsTableAdapter()).GetData();
-            //this.MuscleGroupToolStripComboBox.ComboBox.DisplayMember = muscleDT.Columns[0].ToString();
-            //this.MuscleGroupToolStripComboBox.ComboBox.ValueMember = muscleDT.Columns[0].ToString();
-            //this.MuscleGroupToolStripComboBox.ComboBox.DataSource = muscleDT;
-
-            //DataTable daysDT = findDays.GetWorkoutDays(user.Login);
-            //Calendar.RemoveAllBoldedDates();
-            //foreach (DataRow row in daysDT.Rows) {
-            //   Calendar.AddBoldedDate(Convert.ToDateTime(row["Date"]));
-            //}
+            List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
+            Calendar.RemoveAllBoldedDates();
+            foreach (DateTime date in dates)
+            {
+                Calendar.AddBoldedDate(date);
+            }
+            Calendar.UpdateBoldedDates();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'newGymPlannerDataSet.Exercises' table. You can move, or remove it, as needed.
-            //this.exercisesTableAdapter.Fill(this.dataSet.Exercises);
-
         }
 
         private void CalendarDayClicked(object sender, DateRangeEventArgs e)
         {
+            List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
+            Calendar.RemoveAllBoldedDates();
+            foreach (DateTime date in dates)
+            {
+                Calendar.AddBoldedDate(date);
+            }
+            Calendar.UpdateBoldedDates();
             //DataTable dt = daysAdapter.GetDataByLoginAndDate(user.Login, e.Start.ToShortDateString());
             //int id = -1;
             //if (dt.Rows.Count == 0)
@@ -69,15 +68,16 @@ namespace Gym_Planner_EF
             //{
             //    id = (int)dt.Rows[0]["ID_Day"];
             //}
+
             //using (DayForm dayForm = new DayForm(e.Start, id))
             //{
             //    if (dayForm.ShowDialog() != DialogResult.OK)
             //    {
-            //        DataTable daysDT = findDays.GetWorkoutDays(user.Login);
+            //        List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
             //        Calendar.RemoveAllBoldedDates();
-            //        foreach (DataRow row in daysDT.Rows)
+            //        foreach (DateTime date in dates)
             //        {
-            //            Calendar.AddBoldedDate(Convert.ToDateTime(row["Date"]));
+            //            Calendar.AddBoldedDate(date);
             //        }
             //        Calendar.UpdateBoldedDates();
             //    }
@@ -86,19 +86,14 @@ namespace Gym_Planner_EF
 
         private void AddNewExerciseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //NewExerciseForm newExerciseForm = new NewExerciseForm();
-            //using (NewExerciseForm Window = new NewExerciseForm())
-            //{
-            //    if (Window.ShowDialog() == DialogResult.OK)
-            //    {
-            //        this.exercisesTableAdapter.Fill(this.dataSet.Exercises);
-            //    }
-            //}
-        }
-
-        private void ExercisesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //
+            NewExerciseForm newExerciseForm = new NewExerciseForm();
+            using (NewExerciseForm Window = new NewExerciseForm())
+            {
+                if (Window.ShowDialog() == DialogResult.OK)
+                {
+                    ctx.Exercises.Load();
+                }
+            }
         }
 
         private void ChooseExToolStripMenuItem_Click(object sender, EventArgs e)
@@ -168,7 +163,9 @@ namespace Gym_Planner_EF
 
         private void RemoveExerciseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //queryAdapter.DeleteExercise(ExercisesDataGridView.CurrentCell.Value.ToString());
+            var ex = ctx.Exercises.Where(x => x.Name == ExercisesDataGridView.CurrentCell.Value.ToString()).Select(x => x).FirstOrDefault();
+            ctx.Exercises.Remove(ex);
+            ctx.SaveChanges();
             //this.exercisesTableAdapter.Fill(this.dataSet.Exercises);
         }
 
@@ -215,6 +212,11 @@ namespace Gym_Planner_EF
                 //DayForm dayForm = new DayForm(((System.Data.DataRowView)DayListBox.SelectedItem).Row.ItemArray[0].ToString(), (int)dt.Rows[0]["ID_Day"]);
                 //dayForm.Show();
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctx.Dispose();
         }
     }
 }

@@ -12,19 +12,29 @@ namespace Gym_Planner_EF
 {
     public partial class NewAccountForm : Form
     {
-        //NewGymPlannerDataSet newGymPlannerDataSet;
-        //NewGymPlannerDataSetTableAdapters.UsersTableAdapter usersTableAdapter;
-        //NewGymPlannerDataSetTableAdapters.QueryAdapter QueryAdapter;
+        NewGymPlannerEntities ctx;
         public NewAccountForm()
         {
             InitializeComponent();
-            //newGymPlannerDataSet = new NewGymPlannerDataSet();
-            //usersTableAdapter = new NewGymPlannerDataSetTableAdapters.UsersTableAdapter();
-            //QueryAdapter = new NewGymPlannerDataSetTableAdapters.QueryAdapter();
+            ctx = new NewGymPlannerEntities();
         }
 
         private void CreateAccountButton_Click(object sender, EventArgs e)
         {
+            if (!ctx.Users.Any(u => u.Login == LoginTextBox.Text)) {
+                Users user = new Users()
+                {
+                    Login = LoginTextBox.Text,
+                    Password = PassTextBox.Text,
+                    Name = NameTextBox.Text
+                };
+                ctx.Users.Add(user);
+                ctx.SaveChanges();
+                this.Close();
+            } else
+            {
+                MessageBox.Show("Користувач з таким логіном уже існує");
+            }
             //if (QueryAdapter.CheckLoginExists(LoginTextBox.Text) == 0)
             //{
             //    newGymPlannerDataSet.Users.AddUsersRow(LoginTextBox.Text, PassTextBox.Text, NameTextBox.Text);
@@ -32,6 +42,11 @@ namespace Gym_Planner_EF
             //    this.Close();
             //}
             //else { MessageBox.Show("Користувач з таким логіном уже існує"); }
+        }
+
+        private void NewAccountForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctx.Dispose();
         }
     }
 }

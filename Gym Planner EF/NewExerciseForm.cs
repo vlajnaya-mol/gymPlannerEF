@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,38 +13,36 @@ namespace Gym_Planner_EF
 {
     public partial class NewExerciseForm : Form
     {
-        //NewGymPlannerDataSetTableAdapters.ExercisesTableAdapter exercisesTableAdapter;
-        //NewGymPlannerDataSetTableAdapters.Exercise_MuscleGroupTableAdapter exerciseGroupAdapter;
-        //NewGymPlannerDataSetTableAdapters.QueryAdapter queryAdapter;
+        NewGymPlannerEntities ctx;
         public NewExerciseForm()
         {
             InitializeComponent();
-            //exercisesTableAdapter = new NewGymPlannerDataSetTableAdapters.ExercisesTableAdapter();
-            //exerciseGroupAdapter = new NewGymPlannerDataSetTableAdapters.Exercise_MuscleGroupTableAdapter();
-            //queryAdapter = new NewGymPlannerDataSetTableAdapters.QueryAdapter();
-        }
-
-        private void NewExerciseForm_Load(object sender, EventArgs e)
-        {
-            // TODO: This line of code loads data into the 'newGymPlannerDataSet.MuscleGroups' table. You can move, or remove it, as needed.
-            //this.muscleGroupsTableAdapter.Fill(this.newGymPlannerDataSet.MuscleGroups);
-
+            ctx = new NewGymPlannerEntities();
+            ctx.MuscleGroups.Load();
+            ChooseMuscleGroupComboBox.DataSource = ctx.MuscleGroups.Local.ToBindingList();
         }
 
         private void CreateExerciseButton_Click(object sender, EventArgs e)
         {
-            //if (queryAdapter.CheckExerciseExists(ExerciseNameTextBox.Text) == 0)
-            //{
-            //    newGymPlannerDataSet.Exercises.AddExercisesRow(ExerciseNameTextBox.Text, ExerciseInfoRichTextBox.Text);
-            //    NewGymPlannerDataSet.Exercise_MuscleGroupRow egRow = newGymPlannerDataSet.Exercise_MuscleGroup.NewExercise_MuscleGroupRow();
-            //    egRow.Name_Exercise = ExerciseNameTextBox.Text;
-            //    egRow.Name_MuscleGroup = ChooseMuscleGroupComboBox.GetItemText(ChooseMuscleGroupComboBox.SelectedItem);
-            //    newGymPlannerDataSet.Exercise_MuscleGroup.Rows.Add(egRow);
-            //    exercisesTableAdapter.Update(newGymPlannerDataSet);
-            //    exerciseGroupAdapter.Update(newGymPlannerDataSet);
-            //    this.Close();
-            //}
-            //else { MessageBox.Show("Дана вправа вже існує"); }
+            if (!ctx.Exercises.Any(x => x.Name == ExerciseNameTextBox.Text))
+            {
+                Exercises exercise = new Exercises
+                {
+                    Name = ExerciseNameTextBox.Text,
+                    Information = ExerciseInfoRichTextBox.Text
+                };
+                string group = ChooseMuscleGroupComboBox.GetItemText(ChooseMuscleGroupComboBox.SelectedItem);
+                exercise.MuscleGroups.Add(ctx.MuscleGroups.FirstOrDefault(g => g.Name == group));
+                ctx.Exercises.Add(exercise);
+                ctx.SaveChanges();
+                this.Close();
+            }
+            else { MessageBox.Show("Дана вправа вже існує"); }
+        }
+
+        private void NewExerciseForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctx.Dispose();
         }
     }
 }

@@ -124,6 +124,7 @@
             this.Controls.Add(this.NameTextBox);
             this.Name = "NewAccountForm";
             this.Text = "Створення нового аккаунту";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewAccountForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
