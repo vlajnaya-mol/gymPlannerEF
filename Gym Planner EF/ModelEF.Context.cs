@@ -29,6 +29,7 @@ namespace Gym_Planner_EF
         public virtual DbSet<Exercises> Exercises { get; set; }
         public virtual DbSet<MuscleGroups> MuscleGroups { get; set; }
         public virtual DbSet<Sets> Sets { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Workouts> Workouts { get; set; }
     }
