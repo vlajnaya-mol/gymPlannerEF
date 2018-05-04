@@ -151,6 +151,12 @@
     <EmbeddedResource Include="AuthorizationForm.resx">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DayForm.resx">
+      <DependentUpon>DayForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditSetsForm.resx">
+      <DependentUpon>EditSetsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExerciseChooseForm.resx">
       <DependentUpon>ExerciseChooseForm.cs</DependentUpon>
     </EmbeddedResource>

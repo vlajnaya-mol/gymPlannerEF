@@ -35,9 +35,14 @@ namespace Gym_Planner_EF
             if (ctx.Users.Any(u => u.Login == LoginTextBox.Text && u.Password == PassTextBox.Text))
             {
                 User user = new User(this.LoginTextBox.Text, this.PassTextBox.Text, "TODO");
-                MainForm mainForm = new MainForm(user);
-                mainForm.Show();
                 this.Hide();
+                using (MainForm mainForm = new MainForm(user))
+                {
+                    if (mainForm.ShowDialog() == DialogResult.OK)
+                        this.Show();
+                    else
+                        this.Close();
+                }
             }
             else
             {

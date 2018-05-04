@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,100 +13,62 @@ namespace Gym_Planner_EF
 {
     public partial class DayForm : Form
     {
+        private NewGymPlannerEntities ctx;
         int dayId;
 
-        //NewGymPlannerDataSet dataSet;
-
-        //NewGymPlannerDataSetTableAdapters.QueryAdapter queryAdapter;
-        //NewGymPlannerDataSetTableAdapters.DaysTableAdapter daysAdapter;
-        //NewGymPlannerDataSetTableAdapters.WorkoutsTableAdapter workoutsAdapter;
-        //NewGymPlannerDataSetTableAdapters.Workout_ExerciseTableAdapter workoutExerciseAdapter;
-        //NewGymPlannerDataSetTableAdapters.Day_WorkoutTableAdapter dayWorkoutAdapter;
-        //NewGymPlannerDataSetTableAdapters.WorkoutByDayAdapter workoutByDayAdapter;
-        //NewGymPlannerDataSetTableAdapters.SetsTableAdapter setsAdapter;
-
-        public DayForm(DateTime date, int dayId)
-        {
-            InitializeComponent();
-            this.Text = date.ToShortDateString();
-            this.dayId = dayId;
-        }
-        public DayForm(string date,int dayId)
+        public DayForm(string date, int dayId)
         {
             InitializeComponent();
             this.Text = date;
             this.dayId = dayId;
+            ctx = new NewGymPlannerEntities();
         }
 
         private void DayForm_Load(object sender, EventArgs e)
         {
-            //dataSet = new NewGymPlannerDataSet();
-            //daysAdapter = new NewGymPlannerDataSetTableAdapters.DaysTableAdapter();
-            //queryAdapter = new NewGymPlannerDataSetTableAdapters.QueryAdapter();
-            //workoutsAdapter = new NewGymPlannerDataSetTableAdapters.WorkoutsTableAdapter();
-            //workoutExerciseAdapter = new NewGymPlannerDataSetTableAdapters.Workout_ExerciseTableAdapter();
-            //dayWorkoutAdapter = new NewGymPlannerDataSetTableAdapters.Day_WorkoutTableAdapter();
-            //workoutByDayAdapter = new NewGymPlannerDataSetTableAdapters.WorkoutByDayAdapter();
-            //setsAdapter = new NewGymPlannerDataSetTableAdapters.SetsTableAdapter();
             UpdateTreeView();
         }
 
         private void UpdateTreeView()
         {
-            //PlanTreeView.Nodes.Clear();
-            //DataTable ids = workoutByDayAdapter.GetData(dayId);
-            //DayCommentRichTextBox.Text = daysAdapter.GetDataById(dayId).Rows[0]["Comment"].ToString();
-            ////List<string> exerciseNames = new List<string>(table.Rows.Count);
-            //foreach (DataRow idRow in ids.Rows)
-            //{
-            //    TreeNode exerciseNode = PlanTreeView.Nodes.Add(idRow["Name_Exercise"].ToString());
-            //    exerciseNode.Tag = (idRow["ID_Workout"]);
-            //    DataTable sets = setsAdapter.GetDataByWorkoutId((int)idRow["ID_Workout"]);
-            //    foreach (DataRow setRow in sets.Rows)
-            //    {
-            //        exerciseNode.Nodes.Add(setRow["Num_Reps"].ToString() + " раз(и) по " + setRow["Weight"].ToString() + " кг");
-            //    }
-            //}
-            //PlanTreeView.ExpandAll();
+            ctx.Dispose();
+            ctx = new NewGymPlannerEntities();
+            PlanTreeView.Nodes.Clear();
+            var workouts = (from d in ctx.Days.Where(d => d.ID_Day == dayId) select d).SingleOrDefault().Workouts;
+            DayCommentRichTextBox.Text = (from d in ctx.Days.Where(d => d.ID_Day == dayId)
+                                          select d).SingleOrDefault().Comment.ToString();
+            foreach (Workouts workout in workouts)
+            {
+                TreeNode exerciseNode = PlanTreeView.Nodes.Add(workout.Exercises.SingleOrDefault().Name);
+                exerciseNode.Tag = (workout.ID_Workout);
+                var sets = (from w in ctx.Workouts.Where(w => w.ID_Workout == workout.ID_Workout) select w).SingleOrDefault().Sets;
+                foreach (Sets set in sets)
+                {
+                    exerciseNode.Nodes.Add(set.Num_Reps + " раз(и) по " + set.Weight + " кг");
+                }
+            }
+            PlanTreeView.ExpandAll();
         }
 
         private void AddTrainToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //int workoutId = -1;
-            //using (ExerciseChooseForm Window = new ExerciseChooseForm())
-            //{
-            //    if (Window.ShowDialog() == DialogResult.OK)
-            //    {
-            //        NewGymPlannerDataSet.WorkoutsRow workoutRow = dataSet.Workouts.AddWorkoutsRow(0);
-            //        workoutsAdapter.Update(dataSet);
-
-            //        NewGymPlannerDataSet.Workout_ExerciseRow workoutExerciseRow =
-            //            dataSet.Workout_Exercise.NewWorkout_ExerciseRow();
-            //        workoutId = workoutRow.ID_Workout;
-            //        workoutExerciseRow.ID_Workout = workoutRow.ID_Workout;
-            //        workoutExerciseRow.Name_Exercise = Window.exerciseName;
-            //        dataSet.Workout_Exercise.AddWorkout_ExerciseRow(workoutExerciseRow);
-            //        workoutExerciseAdapter.Update(dataSet);
-
-            //        NewGymPlannerDataSet.Day_WorkoutRow dayWorkoutRow =
-            //            dataSet.Day_Workout.NewDay_WorkoutRow();
-            //        dayWorkoutRow.ID_Workout = workoutRow.ID_Workout;
-            //        dayWorkoutRow.ID_Day = dayId;
-            //        workoutExerciseRow.Name_Exercise = Window.exerciseName;
-            //        dataSet.Day_Workout.AddDay_WorkoutRow(dayWorkoutRow);
-            //        dayWorkoutAdapter.Update(dataSet);
-
-            //        UpdateTreeView();
-            //       // Window.Hide();
-            //        using (EditSetsForm setsForm = new EditSetsForm(workoutId))
-            //        {
-            //            if (setsForm.ShowDialog() == DialogResult.OK)
-            //            {
-            //                UpdateTreeView();
-            //            }
-            //        }
-            //    }
-            //}
+            using (ExerciseChooseForm Window = new ExerciseChooseForm())
+            {
+                if (Window.ShowDialog() == DialogResult.OK)
+                {
+                    Workouts workout = new Workouts
+                    {
+                        Num_Sets = 0
+                    };
+                    workout.Exercises.Add(ctx.Exercises.FirstOrDefault(ex => ex.Name == Window.exerciseName));
+                    workout.Days.Add(ctx.Days.FirstOrDefault(d => d.ID_Day == dayId));
+                    ctx.Workouts.Add(workout);
+                    ctx.SaveChanges();
+                    UpdateTreeView();
+                    (new EditSetsForm(workout.ID_Workout)).ShowDialog();
+                    UpdateTreeView();
+                }
+            }
         }
 
         private void ChangeTrainToolStripMenuItem_Click(object sender, EventArgs e)
@@ -136,22 +99,28 @@ namespace Gym_Planner_EF
                 MessageBox.Show("Виберіть тренування для видалення");
                 return;
             }
+            DialogResult result = MessageBox.Show("Ви дійсно бажаєте видалити тренування?", "Видалення тренування", MessageBoxButtons.YesNo);
+            if (result == DialogResult.No)
+            {
+                return;
+            }
             if (node.Level == 1)
                 node = node.Parent;
             int workoutId = (int)node.Tag;
-            //queryAdapter.DeleteWorkout(workoutId);
+            ctx.Workouts.Remove(ctx.Workouts.FirstOrDefault(w => w.ID_Workout == workoutId));
+            ctx.SaveChanges();
             UpdateTreeView();
         }
 
         private void SaveCommentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //daysAdapter.Fill(dataSet.Days);
-            //DataRow dr = dataSet.Days.Select("ID_Day=" + dayId).FirstOrDefault();
-            //if (dr != null)
-            //{
-            //    dr["Comment"] = DayCommentRichTextBox.Text;
-            //}
-            //daysAdapter.Update(dataSet);
+            ctx.Days.FirstOrDefault(d => d.ID_Day == dayId).Comment = DayCommentRichTextBox.Text;
+            ctx.SaveChanges();
+        }
+
+        private void DayForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctx.Dispose();
         }
     }
 }

@@ -133,6 +133,7 @@
             this.Controls.Add(this.DayTableLayout);
             this.Name = "DayForm";
             this.Text = "DayForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DayForm_FormClosing);
             this.Load += new System.EventHandler(this.DayForm_Load);
             this.DayTableLayout.ResumeLayout(false);
             this.DayTableLayout.PerformLayout();

@@ -141,6 +141,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "EditSetsForm";
             this.Text = "Редагування підходів";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditSetsForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

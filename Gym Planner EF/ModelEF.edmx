@@ -51,16 +51,6 @@
           <Property Name="Num_Reps" Type="int" Nullable="false" />
           <Property Name="Weight" Type="numeric" Precision="4" Scale="1" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="User_Day">
           <Key>
             <PropertyRef Name="Login" />
@@ -278,7 +268,6 @@
           <EntitySet Name="Exercises" EntityType="Self.Exercises" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MuscleGroups" EntityType="Self.MuscleGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sets" EntityType="Self.Sets" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User_Day" EntityType="Self.User_Day" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Workout_Exercise" EntityType="Self.Workout_Exercise" Schema="dbo" store:Type="Tables" />
@@ -366,16 +355,6 @@
           <Property Name="Weight" Type="Decimal" Precision="4" Scale="1" Nullable="false" />
           <NavigationProperty Name="Workouts" Relationship="Self.Workout_Set" FromRole="Sets" ToRole="Workouts" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Login" />
@@ -420,7 +399,6 @@
           <EntitySet Name="Exercises" EntityType="Self.Exercises" />
           <EntitySet Name="MuscleGroups" EntityType="Self.MuscleGroups" />
           <EntitySet Name="Sets" EntityType="Self.Sets" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Users" EntityType="Self.Users" />
           <EntitySet Name="Workouts" EntityType="Self.Workouts" />
           <AssociationSet Name="Day_Workout" Association="Self.Day_Workout">
@@ -481,17 +459,6 @@
                 <ScalarProperty Name="ID_Set" ColumnName="ID_Set" />
                 <ScalarProperty Name="Num_Reps" ColumnName="Num_Reps" />
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="NewGymPlannerModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

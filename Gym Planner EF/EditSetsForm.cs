@@ -13,52 +13,44 @@ namespace Gym_Planner_EF
     public partial class EditSetsForm : Form
     {
         int workoutId;
+        private NewGymPlannerEntities ctx;
 
-        //NewGymPlannerDataSet dataSet;
-        //NewGymPlannerDataSetTableAdapters.QueryAdapter queryAdapter;
-        //NewGymPlannerDataSetTableAdapters.SetsTableAdapter setsAdapter;
-        //NewGymPlannerDataSetTableAdapters.Workout_SetTableAdapter workoutSetAdapter;
         public EditSetsForm(int workoutId)
         {
             InitializeComponent();
             this.workoutId = workoutId;
-            //dataSet = new NewGymPlannerDataSet();
-            //queryAdapter = new NewGymPlannerDataSetTableAdapters.QueryAdapter();
-            //setsAdapter = new NewGymPlannerDataSetTableAdapters.SetsTableAdapter();
-            //workoutSetAdapter = new NewGymPlannerDataSetTableAdapters.Workout_SetTableAdapter();
+            ctx = new NewGymPlannerEntities();
             UpdateListView();
         }
 
         private void UpdateListView()
         {
             RepsListView.Items.Clear();
-            //DataTable dt = setsAdapter.GetDataByWorkoutId(workoutId);
-            //foreach (DataRow row in dt.Rows)
-            //{
-            //    RepsListView.Items.Add(new ListViewItem(new[] { row["Num_Reps"].ToString(), row["Weight"].ToString() })).Tag = row["ID_Set"];
-            //}
+            var sets = ctx.Sets.Where(s => s.Workouts.Any(w => w.ID_Workout == workoutId)); ;
+            foreach (Sets set in sets)
+            {
+                RepsListView.Items.Add(new ListViewItem(new[] { set.Num_Reps.ToString(), set.Weight.ToString() })).Tag = set.ID_Set;
+            }
         }
 
         private void AddSetButton_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    NewGymPlannerDataSet.SetsRow setsRow = dataSet.Sets.AddSetsRow(Int32.Parse(RepsTextBox.Text), Decimal.Parse(WeightTextBox.Text));
-            //    setsAdapter.Update(dataSet);
-
-            //    NewGymPlannerDataSet.Workout_SetRow workoutSetRow =
-            //                dataSet.Workout_Set.NewWorkout_SetRow();
-            //    workoutSetRow.ID_Workout = workoutId;
-            //    workoutSetRow.ID_Set = setsRow.ID_Set;
-            //    dataSet.Workout_Set.AddWorkout_SetRow(workoutSetRow);
-            //    workoutSetAdapter.Update(dataSet);
-
-            //    UpdateListView();
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Неправильний формат даних");
-            //}
+            try
+            {
+                Sets set = new Sets
+                {
+                    Num_Reps = Int32.Parse(RepsTextBox.Text),
+                    Weight = Int32.Parse(WeightTextBox.Text)
+                };
+                set.Workouts.Add(ctx.Workouts.FirstOrDefault(w => w.ID_Workout == workoutId));
+                ctx.Sets.Add(set);
+                ctx.SaveChanges();
+            }
+            catch
+            {
+                MessageBox.Show("Неправильний формат даних");
+            }
+            UpdateListView();
         }
 
         private void RemoveSetButton_Click(object sender, EventArgs e)
@@ -68,13 +60,20 @@ namespace Gym_Planner_EF
                 MessageBox.Show("Виберіть підхід");
                 return;
             }
-           // queryAdapter.DeleteSet((int)RepsListView.SelectedItems[0].Tag);
+            int setId = (int)RepsListView.SelectedItems[0].Tag;
+            ctx.Sets.Remove(ctx.Sets.FirstOrDefault(s => s.ID_Set == setId));
+            ctx.SaveChanges();
             UpdateListView();
         }
 
         private void DoneButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void EditSetsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctx.Dispose();
         }
     }
 }

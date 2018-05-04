@@ -38,12 +38,25 @@ namespace Gym_Planner_EF
             Calendar.UpdateBoldedDates();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-        }
-
         private void CalendarDayClicked(object sender, DateRangeEventArgs e)
         {
+            var day = ctx.Days.FirstOrDefault(d => d.Users.Any(u => u.Login == user.Login) && d.Date == e.Start.Date);
+            int id = -1;
+            if (day == null)
+            {
+                Days newDay = new Days
+                {
+                    Date = e.Start.Date,
+                    Comment = ""
+                };
+                newDay.Users.Add(ctx.Users.FirstOrDefault(u => u.Login == user.Login));
+                ctx.Days.Add(newDay);
+                ctx.SaveChanges();
+                day = newDay;
+
+            }
+            id = day.ID_Day;
+            (new DayForm(e.Start.ToShortDateString(), id)).ShowDialog();
             List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
             Calendar.RemoveAllBoldedDates();
             foreach (DateTime date in dates)
@@ -51,38 +64,6 @@ namespace Gym_Planner_EF
                 Calendar.AddBoldedDate(date);
             }
             Calendar.UpdateBoldedDates();
-            //DataTable dt = daysAdapter.GetDataByLoginAndDate(user.Login, e.Start.ToShortDateString());
-            //int id = -1;
-            //if (dt.Rows.Count == 0)
-            //{
-            //    NewGymPlannerDataSet.DaysRow dayRow = dataSet.Days.AddDaysRow(e.Start, "");
-            //    daysAdapter.Update(dataSet);
-            //    id = dayRow.ID_Day;
-
-            //    NewGymPlannerDataSet.User_DayRow userDayRow = dataSet.User_Day.NewUser_DayRow();
-            //    userDayRow.Login = user.Login;
-            //    userDayRow.ID_Day = id;
-            //    dataSet.User_Day.AddUser_DayRow(userDayRow);
-            //    userDayAdapter.Update(dataSet);
-            //}
-            //else
-            //{
-            //    id = (int)dt.Rows[0]["ID_Day"];
-            //}
-
-            //using (DayForm dayForm = new DayForm(e.Start, id))
-            //{
-            //    if (dayForm.ShowDialog() != DialogResult.OK)
-            //    {
-            //        List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
-            //        Calendar.RemoveAllBoldedDates();
-            //        foreach (DateTime date in dates)
-            //        {
-            //            Calendar.AddBoldedDate(date);
-            //        }
-            //        Calendar.UpdateBoldedDates();
-            //    }
-            //}
         }
 
         private void AddNewExerciseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -167,14 +148,12 @@ namespace Gym_Planner_EF
             var ex = ctx.Exercises.Where(x => x.Name == ExercisesDataGridView.CurrentCell.Value.ToString()).Select(x => x).FirstOrDefault();
             ctx.Exercises.Remove(ex);
             ctx.SaveChanges();
-            //this.exercisesTableAdapter.Fill(this.dataSet.Exercises);
         }
 
         private void linkLabelLogout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
             this.Close();
-            AuthorizationForm authorizationForm = new AuthorizationForm();
-            authorizationForm.Show();
         }
 
         private void FindButton_Click(object sender, EventArgs e)
@@ -185,13 +164,13 @@ namespace Gym_Planner_EF
 
             var query = (from day in this.ctx.Days select day);
 
-            query = query.Where(d => d.Date.CompareTo(this.BeforeDateTimePicker.Value) <= 0 && d.Date.CompareTo(this.AfterDateTimePicker.Value) >= 0);
+            query = query.Where(d => d.Date.CompareTo(this.BeforeDateTimePicker.Value) <= 0 && d.Date.CompareTo(this.AfterDateTimePicker.Value) >= 0 && d.Workouts.Count() > 0);
 
             if (this.searchExerciseChosen)
                 query = query.Where(d => d.Workouts.Any(w => w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)));
 
             if (this.RepsTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s=> s.Num_Reps == Int32.Parse(RepsTextBox.Text) && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Num_Reps == Int32.Parse(RepsTextBox.Text) && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
 
             //if (this.minWeightTextBox.Text != "" || this.maxWeightTextBox.Text != "")
             //    query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => (this.minWeightTextBox.Text != "" || Convert.ToDouble(s.Weight) >= Convert.ToDouble(minWeightTextBox.Text)) 
@@ -203,7 +182,6 @@ namespace Gym_Planner_EF
             this.DayListBox.DisplayMember = "Дні";
             this.DayListBox.ValueMember = "Дні";
             this.DayListBox.DataSource = bs;
-            MessageBox.Show("");
 
             //try
             //{
@@ -236,9 +214,10 @@ namespace Gym_Planner_EF
         {
             if (this.DayListBox.SelectedItems.Count == 1)
             {
-                //DataTable dt = daysAdapter.GetDataByLoginAndDate(user.Login, ((System.Data.DataRowView)DayListBox.SelectedItem).Row.ItemArray[0].ToString());
-                //DayForm dayForm = new DayForm(((System.Data.DataRowView)DayListBox.SelectedItem).Row.ItemArray[0].ToString(), (int)dt.Rows[0]["ID_Day"]);
-                //dayForm.Show();
+                DateTime date = Convert.ToDateTime((DayListBox.SelectedItem));
+                var day = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Date == date) select d).SingleOrDefault();
+                DayForm dayForm = new DayForm(day.Date.ToString(), day.ID_Day);
+                dayForm.Show();
             }
         }
 
