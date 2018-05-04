@@ -116,29 +116,35 @@ namespace Gym_Planner_EF
 
         private void UpdateChart(List<string> exercises)
         {
-            //this.ExerciseStatisticChart.Series.Clear();
-            //try
-            //{
-            //    foreach (string exerciseName in exercises)
-            //    {
-            //        this.ExerciseStatisticChart.Series.Add(exerciseName);
-            //        DataTable dataTable = this.recordsByDateAdapter1.GetData(this.user.Login, exerciseName);
-            //        List<double> weights = new List<double>(dataTable.Rows.Count);
-            //        foreach (DataRow row in dataTable.Rows)
-            //            weights.Add(Convert.ToDouble(row[1]));
-            //        this.ExerciseStatisticChart.Series[exerciseName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            //        this.ExerciseStatisticChart.Series[exerciseName].Points.DataBindY(weights);
-            //    }
-            //    this.ExerciseStatisticChart.ChartAreas[0].AxisX.Title = "Час";
-            //    this.ExerciseStatisticChart.ChartAreas[0].AxisX.ArrowStyle = System.Windows.Forms.DataVisualization.Charting.AxisArrowStyle.Triangle;
-            //    this.ExerciseStatisticChart.ChartAreas[0].AxisX.LabelStyle.Enabled = false;
-            //    this.ExerciseStatisticChart.ChartAreas[0].AxisY.Title = "Вага";
-            //    this.ExerciseStatisticChart.ChartAreas[0].AxisY.ArrowStyle = System.Windows.Forms.DataVisualization.Charting.AxisArrowStyle.Triangle;
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    System.Windows.Forms.MessageBox.Show(ex.Message);
-            //}
+            this.ExerciseStatisticChart.Series.Clear();
+            try
+            {
+                foreach (string exerciseName in exercises)
+                {
+                    this.ExerciseStatisticChart.Series.Add(exerciseName);
+                    var records = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Any(w => w.Exercises.Any(ex => ex.Name == exerciseName)))
+                                   group d by d.ID_Day into g
+                                   select new
+                                   {
+                                       date = (from d in g select d.Date).FirstOrDefault(),
+                                       record = (from w in (from day in g select day.Workouts.FirstOrDefault())
+                                                 select w.Sets.Max(s => s.Weight)).Max()
+                                   }).ToList();
+                    this.ExerciseStatisticChart.Series[exerciseName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                    foreach (var record in records)
+                        this.ExerciseStatisticChart.Series[exerciseName].Points.AddXY(record.date, record.record);
+
+                }
+                this.ExerciseStatisticChart.ChartAreas[0].AxisX.Title = "Час";
+                this.ExerciseStatisticChart.ChartAreas[0].AxisX.ArrowStyle = System.Windows.Forms.DataVisualization.Charting.AxisArrowStyle.Triangle;
+                this.ExerciseStatisticChart.ChartAreas[0].AxisX.LabelStyle.Format = "dd-MM-yy";
+                this.ExerciseStatisticChart.ChartAreas[0].AxisY.Title = "Вага";
+                this.ExerciseStatisticChart.ChartAreas[0].AxisY.ArrowStyle = System.Windows.Forms.DataVisualization.Charting.AxisArrowStyle.Triangle;
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
         }
 
         private void ExercisesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -152,14 +158,18 @@ namespace Gym_Planner_EF
 
         private void MuscleGroupToolStripComboBox_Click(object sender, EventArgs e)
         {
-            //if (!this.MuscleGroupToolStripComboBox.Selected)
-            //    return;
-            //DataTable dataTable = (new NewGymPlannerDataSetTableAdapters.ExerciseByMuscleGroupTableAdapter()).GetData(((System.Data.DataRowView)this.MuscleGroupToolStripComboBox.SelectedItem).Row.ItemArray[0].ToString());
+            this.ctx = new NewGymPlannerEntities();
 
-            //List<string> exercises = new List<string>();
-            //foreach (DataRow row in dataTable.Rows)
-            //    exercises.Add(row[0].ToString());
-            //this.UpdateChart(exercises);
+            if (!this.MuscleGroupToolStripComboBox.Selected)
+                return;
+            string muscleGroup = MuscleGroupToolStripComboBox.SelectedItem.ToString();
+
+            List<string> exercises =
+                (from ex in ctx.Exercises.Where(ex => ex.Workouts.Any(w => w.Days.Any(d => d.Users.Any(u => u.Login == user.Login)))
+                 && ex.MuscleGroups.Any(mg => mg.Name == muscleGroup))
+                 select ex.Name).ToList();
+
+            this.UpdateChart(exercises);
         }
 
         private void RemoveExerciseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -191,7 +201,7 @@ namespace Gym_Planner_EF
                 query = query.Where(d => d.Workouts.Any(w => w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)));
 
             if (this.RepsTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s=> s.Num_Reps == Int32.Parse(RepsTextBox.Text) && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Num_Reps == Int32.Parse(RepsTextBox.Text) && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
 
             //if (this.minWeightTextBox.Text != "" || this.maxWeightTextBox.Text != "")
             //    query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => (this.minWeightTextBox.Text != "" || Convert.ToDouble(s.Weight) >= Convert.ToDouble(minWeightTextBox.Text)) 

@@ -8,7 +8,7 @@
         <EntityTypeShape EntityType="NewGymPlannerModel.Days" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Exercises" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.MuscleGroups" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="NewGymPlannerModel.Sets" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NewGymPlannerModel.Sets" Width="1.5" PointX="5.5" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Users" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Workouts" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
