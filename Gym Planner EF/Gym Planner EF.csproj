@@ -142,9 +142,6 @@
     <Compile Include="Sets.cs">
       <DependentUpon>ModelEF.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelEF.tt</DependentUpon>
-    </Compile>
     <Compile Include="User.cs" />
     <Compile Include="Users.cs">
       <DependentUpon>ModelEF.tt</DependentUpon>

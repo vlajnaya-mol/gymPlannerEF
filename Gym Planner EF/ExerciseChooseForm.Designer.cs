@@ -35,7 +35,10 @@
             this.ExerciseFindLabel = new System.Windows.Forms.Label();
             this.ExercisesListBox = new System.Windows.Forms.ListBox();
             this.exercisesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.muscleGroupsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ChooseMuscleGroupComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muscleGroupsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // ExerciseNameTextBox
@@ -44,7 +47,7 @@
             this.ExerciseNameTextBox.Name = "ExerciseNameTextBox";
             this.ExerciseNameTextBox.Size = new System.Drawing.Size(262, 22);
             this.ExerciseNameTextBox.TabIndex = 0;
-            this.ExerciseNameTextBox.TextChanged += new System.EventHandler(this.ExerciseNameTExtBox_TextChanged);
+            this.ExerciseNameTextBox.TextChanged += new System.EventHandler(this.ExerciseNameTextBox_TextChanged);
             // 
             // GetExerciseButton
             // 
@@ -70,7 +73,7 @@
             // ExerciseFindLabel
             // 
             this.ExerciseFindLabel.AutoSize = true;
-            this.ExerciseFindLabel.Location = new System.Drawing.Point(9, 87);
+            this.ExerciseFindLabel.Location = new System.Drawing.Point(9, 124);
             this.ExerciseFindLabel.Name = "ExerciseFindLabel";
             this.ExerciseFindLabel.Size = new System.Drawing.Size(276, 17);
             this.ExerciseFindLabel.TabIndex = 4;
@@ -80,20 +83,34 @@
             // 
             this.ExercisesListBox.FormattingEnabled = true;
             this.ExercisesListBox.ItemHeight = 16;
-            this.ExercisesListBox.Location = new System.Drawing.Point(12, 112);
+            this.ExercisesListBox.Location = new System.Drawing.Point(12, 144);
             this.ExercisesListBox.Name = "ExercisesListBox";
-            this.ExercisesListBox.Size = new System.Drawing.Size(402, 340);
+            this.ExercisesListBox.Size = new System.Drawing.Size(402, 308);
             this.ExercisesListBox.TabIndex = 5;
             // 
             // exercisesBindingSource
             // 
             this.exercisesBindingSource.DataSource = typeof(Gym_Planner_EF.Exercises);
             // 
+            // muscleGroupsBindingSource
+            // 
+            this.muscleGroupsBindingSource.DataSource = typeof(Gym_Planner_EF.MuscleGroups);
+            // 
+            // ChooseMuscleGroupComboBox
+            // 
+            this.ChooseMuscleGroupComboBox.FormattingEnabled = true;
+            this.ChooseMuscleGroupComboBox.Location = new System.Drawing.Point(15, 85);
+            this.ChooseMuscleGroupComboBox.Name = "ChooseMuscleGroupComboBox";
+            this.ChooseMuscleGroupComboBox.Size = new System.Drawing.Size(213, 24);
+            this.ChooseMuscleGroupComboBox.TabIndex = 6;
+            this.ChooseMuscleGroupComboBox.SelectedValueChanged += new System.EventHandler(this.ChooseMuscleGroupComboBox_SelectedValueChanged);
+            // 
             // ExerciseChooseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 472);
+            this.Controls.Add(this.ChooseMuscleGroupComboBox);
             this.Controls.Add(this.ExercisesListBox);
             this.Controls.Add(this.ExerciseFindLabel);
             this.Controls.Add(this.ExerciseNameLabel);
@@ -101,7 +118,9 @@
             this.Controls.Add(this.ExerciseNameTextBox);
             this.Name = "ExerciseChooseForm";
             this.Text = "Вибір вправи";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExerciseChooseForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.exercisesBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muscleGroupsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,5 +134,7 @@
         private System.Windows.Forms.Label ExerciseFindLabel;
         private System.Windows.Forms.ListBox ExercisesListBox;
         private System.Windows.Forms.BindingSource exercisesBindingSource;
+        private System.Windows.Forms.BindingSource muscleGroupsBindingSource;
+        private System.Windows.Forms.ComboBox ChooseMuscleGroupComboBox;
     }
 }

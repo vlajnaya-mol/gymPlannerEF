@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuthorizationForm));
             this.LoginTextBox = new System.Windows.Forms.TextBox();
             this.PassTextBox = new System.Windows.Forms.TextBox();
             this.SignInButton = new System.Windows.Forms.Button();
@@ -106,7 +107,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 250);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(461, 277);
             this.Controls.Add(this.AuthorizationLabel);
             this.Controls.Add(this.NewAccount);
             this.Controls.Add(this.LoginLabel);

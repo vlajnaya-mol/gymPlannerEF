@@ -36,6 +36,14 @@ namespace Gym_Planner_EF
                 Calendar.AddBoldedDate(date);
             }
             Calendar.UpdateBoldedDates();
+
+            string muscleGroup = MuscleGroupToolStripComboBox.SelectedItem.ToString();
+            List<string> exercises =
+                (from ex in ctx.Exercises.Where(ex => ex.Workouts.Any(w => w.Days.Any(d => d.Users.Any(u => u.Login == user.Login)))
+                 && ex.MuscleGroups.Any(mg => mg.Name == muscleGroup))
+                 select ex.Name).ToList();
+
+            this.UpdateChart(exercises);
         }
 
         private void CalendarDayClicked(object sender, DateRangeEventArgs e)
@@ -74,6 +82,7 @@ namespace Gym_Planner_EF
                 if (Window.ShowDialog() == DialogResult.OK)
                 {
                     ctx.Exercises.Load();
+                    this.exercisesBindingSource.DataSource = this.ctx.Exercises.Local.ToBindingList();
                 }
             }
         }
@@ -158,6 +167,8 @@ namespace Gym_Planner_EF
             var ex = ctx.Exercises.Where(x => x.Name == ExercisesDataGridView.CurrentCell.Value.ToString()).Select(x => x).FirstOrDefault();
             ctx.Exercises.Remove(ex);
             ctx.SaveChanges();
+            ctx.Exercises.Load();
+            this.exercisesBindingSource.DataSource = this.ctx.Exercises.Local.ToBindingList();
         }
 
         private void linkLabelLogout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
