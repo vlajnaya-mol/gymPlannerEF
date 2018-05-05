@@ -179,11 +179,17 @@ namespace Gym_Planner_EF
 
         private void FindButton_Click(object sender, EventArgs e)
         {
-            this.ctx.Dispose();
+            //this.ctx.Dispose();
             this.ctx = new NewGymPlannerEntities();
             this.ctx.Configuration.ProxyCreationEnabled = false;
-
             var query = (from day in this.ctx.Days select day);
+
+            int reps;
+            Int32.TryParse(RepsTextBox.Text, out reps);
+            int minW;
+            Int32.TryParse(minWeightTextBox.Text, out minW);
+            int maxW;
+            Int32.TryParse(maxWeightTextBox.Text, out maxW);
 
             query = query.Where(d => d.Date.CompareTo(this.BeforeDateTimePicker.Value) <= 0 && d.Date.CompareTo(this.AfterDateTimePicker.Value) >= 0 && d.Workouts.Count() > 0);
 
@@ -191,12 +197,13 @@ namespace Gym_Planner_EF
                 query = query.Where(d => d.Workouts.Any(w => w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)));
 
             if (this.RepsTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Num_Reps == Int32.Parse(RepsTextBox.Text) && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Num_Reps == reps && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
 
-            //if (this.minWeightTextBox.Text != "" || this.maxWeightTextBox.Text != "")
-            //    query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => (this.minWeightTextBox.Text != "" || Convert.ToDouble(s.Weight) >= Convert.ToDouble(minWeightTextBox.Text)) 
-            //                        && (this.maxWeightTextBox.Text != "" || Convert.ToDouble(s.Weight) <= Convert.ToDouble(maxWeightTextBox.Text))
-            //                        && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+            if (this.maxWeightTextBox.Text != "")
+                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Weight <= maxW && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+
+            if (this.minWeightTextBox.Text != "")
+                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Weight >= minW && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
 
             var bs = new BindingSource();
             bs.DataSource = query.Select(d => d.Date).ToList();
