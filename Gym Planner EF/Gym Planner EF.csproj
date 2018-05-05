@@ -142,9 +142,6 @@
     <Compile Include="Sets.cs">
       <DependentUpon>ModelEF.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelEF.tt</DependentUpon>
-    </Compile>
     <Compile Include="User.cs" />
     <Compile Include="Users.cs">
       <DependentUpon>ModelEF.tt</DependentUpon>
@@ -203,19 +200,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ModelEF.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModelEF.Context.cs</LastGenOutput>
-      <DependentUpon>ModelEF.edmx</DependentUpon>
-    </Content>
-    <Content Include="ModelEF.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelEF.edmx</DependentUpon>
-      <LastGenOutput>ModelEF.cs</LastGenOutput>
-    </Content>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -231,6 +218,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ModelEF.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelEF.edmx</DependentUpon>
+      <LastGenOutput>ModelEF.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="ModelEF.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelEF.edmx</DependentUpon>
+      <LastGenOutput>ModelEF.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
