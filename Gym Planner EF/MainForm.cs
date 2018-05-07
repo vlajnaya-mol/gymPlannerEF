@@ -29,13 +29,7 @@ namespace Gym_Planner_EF
             this.exercisesBindingSource.DataSource = this.ctx.Exercises.Local.ToBindingList();
             MuscleGroupToolStripComboBox.ComboBox.DataSource = ctx.MuscleGroups.Select(g => g.Name).ToList();
 
-            List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
-            Calendar.RemoveAllBoldedDates();
-            foreach (DateTime date in dates)
-            {
-                Calendar.AddBoldedDate(date);
-            }
-            Calendar.UpdateBoldedDates();
+            UpdateCalendar();
 
             string muscleGroup = MuscleGroupToolStripComboBox.SelectedItem.ToString();
             List<string> exercises =
@@ -48,6 +42,17 @@ namespace Gym_Planner_EF
             workoutsListView.Columns.Add("Вправа", -2, HorizontalAlignment.Left);
             workoutsListView.View = View.Details;
             FindButton_Click(this, EventArgs.Empty);
+        }
+
+        private void UpdateCalendar()
+        {
+            List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
+            Calendar.RemoveAllBoldedDates();
+            foreach (DateTime date in dates)
+            {
+                Calendar.AddBoldedDate(date);
+            }
+            Calendar.UpdateBoldedDates();
         }
 
         private void CalendarDayClicked(object sender, DateRangeEventArgs e)
@@ -69,13 +74,7 @@ namespace Gym_Planner_EF
             }
             id = day.ID_Day;
             (new DayForm(e.Start.ToShortDateString(), id)).ShowDialog();
-            List<DateTime> dates = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Workouts.Count() > 0) select d.Date).ToList();
-            Calendar.RemoveAllBoldedDates();
-            foreach (DateTime date in dates)
-            {
-                Calendar.AddBoldedDate(date);
-            }
-            Calendar.UpdateBoldedDates();
+            UpdateCalendar();
         }
 
         private void AddNewExerciseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,10 +168,13 @@ namespace Gym_Planner_EF
         private void RemoveExerciseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var ex = ctx.Exercises.Where(x => x.Name == ExercisesDataGridView.CurrentCell.Value.ToString()).Select(x => x).FirstOrDefault();
+            ctx.Workouts.RemoveRange(ctx.Workouts.Where(w => w.Exercises.Any(exercise => exercise.Name == ex.Name)));
             ctx.Exercises.Remove(ex);
             ctx.SaveChanges();
             ctx.Exercises.Load();
             this.exercisesBindingSource.DataSource = this.ctx.Exercises.Local.ToBindingList();
+            UpdateCalendar();
+
         }
 
         private void linkLabelLogout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
