@@ -256,5 +256,15 @@ namespace Gym_Planner_EF
         {
             ctx.Dispose();
         }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            this.RepsTextBox.Text = "";
+            this.minWeightTextBox.Text = "";
+            this.maxWeightTextBox.Text = "";
+            this.ExerciseNameLabel.Text = "";
+            this.AfterDateTimePicker.Value = DateTime.Today.AddMonths(-3);
+            this.BeforeDateTimePicker.Value = DateTime.Now;
+        }
     }
 }

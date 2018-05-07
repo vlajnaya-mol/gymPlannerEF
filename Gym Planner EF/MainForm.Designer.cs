@@ -41,6 +41,7 @@
             this.FindDayTab = new System.Windows.Forms.TabPage();
             this.FindDayTable = new System.Windows.Forms.TableLayoutPanel();
             this.FindPanel = new System.Windows.Forms.Panel();
+            this.resetButton = new System.Windows.Forms.Button();
             this.ExerciseNameLabel = new System.Windows.Forms.Label();
             this.GetExerciseButton = new System.Windows.Forms.Button();
             this.ExerciseLabel = new System.Windows.Forms.Label();
@@ -183,6 +184,7 @@
             // 
             // FindPanel
             // 
+            this.FindPanel.Controls.Add(this.resetButton);
             this.FindPanel.Controls.Add(this.ExerciseNameLabel);
             this.FindPanel.Controls.Add(this.GetExerciseButton);
             this.FindPanel.Controls.Add(this.ExerciseLabel);
@@ -203,6 +205,16 @@
             this.FindPanel.Name = "FindPanel";
             this.FindPanel.Size = new System.Drawing.Size(461, 402);
             this.FindPanel.TabIndex = 1;
+            // 
+            // resetButton
+            // 
+            this.resetButton.Location = new System.Drawing.Point(27, 356);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(121, 29);
+            this.resetButton.TabIndex = 15;
+            this.resetButton.Text = "Ресет";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // ExerciseNameLabel
             // 
@@ -279,7 +291,7 @@
             // wereFoundLabel
             // 
             this.wereFoundLabel.AutoSize = true;
-            this.wereFoundLabel.Location = new System.Drawing.Point(203, 345);
+            this.wereFoundLabel.Location = new System.Drawing.Point(203, 327);
             this.wereFoundLabel.Name = "wereFoundLabel";
             this.wereFoundLabel.Size = new System.Drawing.Size(85, 17);
             this.wereFoundLabel.TabIndex = 6;
@@ -302,9 +314,9 @@
             // 
             // FindButton
             // 
-            this.FindButton.Location = new System.Drawing.Point(27, 333);
+            this.FindButton.Location = new System.Drawing.Point(27, 321);
             this.FindButton.Name = "FindButton";
-            this.FindButton.Size = new System.Drawing.Size(128, 41);
+            this.FindButton.Size = new System.Drawing.Size(121, 29);
             this.FindButton.TabIndex = 3;
             this.FindButton.Text = "Знайти!";
             this.FindButton.UseVisualStyleBackColor = true;
@@ -622,5 +634,6 @@
         private System.Windows.Forms.ToolStripComboBox MuscleGroupToolStripComboBox;
         private System.Windows.Forms.LinkLabel linkLabelLogout;
         private System.Windows.Forms.ListView workoutsListView;
+        private System.Windows.Forms.Button resetButton;
     }
 }
