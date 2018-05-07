@@ -56,7 +56,7 @@
             this.minWeightTextBox = new System.Windows.Forms.TextBox();
             this.maxWeightTextBox = new System.Windows.Forms.TextBox();
             this.RepsTextBox = new System.Windows.Forms.TextBox();
-            this.DayListBox = new System.Windows.Forms.ListBox();
+            this.workoutsListView = new System.Windows.Forms.ListView();
             this.ExercisesTab = new System.Windows.Forms.TabPage();
             this.ExercisesTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ExerciseInfoLabel = new System.Windows.Forms.Label();
@@ -172,7 +172,7 @@
             this.FindDayTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.FindDayTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.FindDayTable.Controls.Add(this.FindPanel, 1, 0);
-            this.FindDayTable.Controls.Add(this.DayListBox, 0, 0);
+            this.FindDayTable.Controls.Add(this.workoutsListView, 0, 0);
             this.FindDayTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FindDayTable.Location = new System.Drawing.Point(3, 3);
             this.FindDayTable.Name = "FindDayTable";
@@ -298,6 +298,7 @@
             this.AfterDateTimePicker.Name = "AfterDateTimePicker";
             this.AfterDateTimePicker.Size = new System.Drawing.Size(227, 22);
             this.AfterDateTimePicker.TabIndex = 4;
+            this.AfterDateTimePicker.Value = new System.DateTime(2018, 1, 31, 0, 0, 0, 0);
             // 
             // FindButton
             // 
@@ -330,16 +331,16 @@
             this.RepsTextBox.Size = new System.Drawing.Size(227, 22);
             this.RepsTextBox.TabIndex = 0;
             // 
-            // DayListBox
+            // workoutsListView
             // 
-            this.DayListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DayListBox.FormattingEnabled = true;
-            this.DayListBox.ItemHeight = 16;
-            this.DayListBox.Location = new System.Drawing.Point(3, 3);
-            this.DayListBox.Name = "DayListBox";
-            this.DayListBox.Size = new System.Drawing.Size(461, 402);
-            this.DayListBox.TabIndex = 2;
-            this.DayListBox.DoubleClick += new System.EventHandler(this.DayListBox_DoubleClick);
+            this.workoutsListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.workoutsListView.FullRowSelect = true;
+            this.workoutsListView.Location = new System.Drawing.Point(3, 3);
+            this.workoutsListView.Name = "workoutsListView";
+            this.workoutsListView.Size = new System.Drawing.Size(461, 402);
+            this.workoutsListView.TabIndex = 2;
+            this.workoutsListView.UseCompatibleStateImageBehavior = false;
+            this.workoutsListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DayListBox_DoubleClick);
             // 
             // ExercisesTab
             // 
@@ -578,27 +579,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn informationDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn muscleGroupsDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn workoutsDataGridViewTextBoxColumn;
-        private System.Windows.Forms.TabControl MainTabControl;
-        private System.Windows.Forms.TabPage CalendarTab;
-        private System.Windows.Forms.MonthCalendar Calendar;
-        private System.Windows.Forms.TabPage ExercisesTab;
-        private System.Windows.Forms.TableLayoutPanel ExercisesTableLayoutPanel;
-        private System.Windows.Forms.Label ExerciseInfoLabel;
-        private System.Windows.Forms.DataGridView ExercisesDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumnName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumnInfo;
-        private System.Windows.Forms.MenuStrip ExercisesMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem AddNewExerciseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RemoveExerciseToolStripMenuItem;
-        private System.Windows.Forms.TabPage StatTab;
-        private System.Windows.Forms.MenuStrip StatMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem ChooseExToolStripMenuItem;
-        private System.Windows.Forms.ToolStripComboBox MuscleGroupToolStripComboBox;
-        private System.Windows.Forms.LinkLabel linkLabelLogout;
+        private System.Windows.Forms.BindingSource exercisesBindingSource;
+        private System.Windows.Forms.TabControl MainTabControl;
+        private System.Windows.Forms.TabPage CalendarTab;
         private System.Windows.Forms.TableLayoutPanel CalendarTabPanel;
+        private System.Windows.Forms.MonthCalendar Calendar;
         private System.Windows.Forms.TabPage FindDayTab;
         private System.Windows.Forms.TableLayoutPanel FindDayTable;
         private System.Windows.Forms.Panel FindPanel;
+        private System.Windows.Forms.Label ExerciseNameLabel;
+        private System.Windows.Forms.Button GetExerciseButton;
+        private System.Windows.Forms.Label ExerciseLabel;
         private System.Windows.Forms.Label maxWeightLabel;
         private System.Windows.Forms.Label minWeightLabel;
         private System.Windows.Forms.Label rapsLabel;
@@ -611,15 +604,23 @@
         private System.Windows.Forms.TextBox minWeightTextBox;
         private System.Windows.Forms.TextBox maxWeightTextBox;
         private System.Windows.Forms.TextBox RepsTextBox;
-        private System.Windows.Forms.Label ExerciseNameLabel;
-        private System.Windows.Forms.Button GetExerciseButton;
-        private System.Windows.Forms.Label ExerciseLabel;
-        private System.Windows.Forms.ListBox DayListBox;
-        private System.Windows.Forms.BindingSource exercisesBindingSource;
+        private System.Windows.Forms.TabPage ExercisesTab;
+        private System.Windows.Forms.TableLayoutPanel ExercisesTableLayoutPanel;
+        private System.Windows.Forms.Label ExerciseInfoLabel;
+        private System.Windows.Forms.DataGridView ExercisesDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.MenuStrip ExercisesMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem AddNewExerciseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RemoveExerciseToolStripMenuItem;
+        private System.Windows.Forms.TabPage StatTab;
         private System.Windows.Forms.DataVisualization.Charting.Chart ExerciseStatisticChart;
+        private System.Windows.Forms.MenuStrip StatMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem ChooseExToolStripMenuItem;
+        private System.Windows.Forms.ToolStripComboBox MuscleGroupToolStripComboBox;
+        private System.Windows.Forms.LinkLabel linkLabelLogout;
+        private System.Windows.Forms.ListView workoutsListView;
     }
 }

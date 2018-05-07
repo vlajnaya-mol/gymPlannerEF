@@ -44,6 +44,10 @@ namespace Gym_Planner_EF
                  select ex.Name).ToList();
 
             this.UpdateChart(exercises);
+            workoutsListView.Columns.Add("День", -1, HorizontalAlignment.Left);
+            workoutsListView.Columns.Add("Вправа", -2, HorizontalAlignment.Left);
+            workoutsListView.View = View.Details;
+            FindButton_Click(this, EventArgs.Empty);
         }
 
         private void CalendarDayClicked(object sender, DateRangeEventArgs e)
@@ -179,10 +183,9 @@ namespace Gym_Planner_EF
 
         private void FindButton_Click(object sender, EventArgs e)
         {
-            //this.ctx.Dispose();
+            this.workoutsListView.Items.Clear();
             this.ctx = new NewGymPlannerEntities();
             this.ctx.Configuration.ProxyCreationEnabled = false;
-            var query = (from day in this.ctx.Days select day);
 
             int reps;
             Int32.TryParse(RepsTextBox.Text, out reps);
@@ -191,39 +194,37 @@ namespace Gym_Planner_EF
             int maxW;
             Int32.TryParse(maxWeightTextBox.Text, out maxW);
 
-            query = query.Where(d => d.Date.CompareTo(this.BeforeDateTimePicker.Value) <= 0 && d.Date.CompareTo(this.AfterDateTimePicker.Value) >= 0 && d.Workouts.Count() > 0);
+            var workouts = (from w in ctx.Workouts select w);
+
+            workouts = workouts.Where(w => w.Days.Any(d => d.Users.Any(u => u.Login == user.Login)));
+
+            workouts = workouts.Where(w => w.Days.Any(d => d.Date.CompareTo(this.BeforeDateTimePicker.Value) <= 0 && d.Date.CompareTo(this.AfterDateTimePicker.Value) >= 0 && d.Workouts.Count() > 0));
 
             if (this.searchExerciseChosen)
-                query = query.Where(d => d.Workouts.Any(w => w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)));
+                workouts = workouts.Where(w => w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text));
 
             if (this.RepsTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Num_Reps == reps && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                workouts = workouts.Where(w => w.Sets.Any(s => s.Num_Reps == reps));
 
             if (this.maxWeightTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Weight <= maxW && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                workouts = workouts.Where(w => w.Sets.Any(s => s.Weight <= maxW));
 
             if (this.minWeightTextBox.Text != "")
-                query = query.Where(d => d.Workouts.Any(w => w.Sets.Any(s => s.Weight >= minW && (!this.searchExerciseChosen || w.Exercises.Any(ex => ex.Name == ExerciseNameLabel.Text)))));
+                workouts = workouts.Where(w => w.Sets.Any(s => s.Weight >= minW));
 
-            var bs = new BindingSource();
-            bs.DataSource = query.Select(d => d.Date).ToList();
-            this.DayListBox.DisplayMember = "Дні";
-            this.DayListBox.ValueMember = "Дні";
-            this.DayListBox.DataSource = bs;
+            var workoutPlusDay = (from w in workouts
+                                  select
+               new
+               {
+                   day = w.Days.FirstOrDefault().Date,
+                   workout = w.Exercises.FirstOrDefault().Name
+               });
 
-            //try
-            //{
-            //    DataTable dataTable = findDays.GetData(Parser.ToNullableInt(RepsTextBox.Text),
-            //    Parser.ToNullableDecimal(minWeightTextBox.Text), Parser.ToNullableDecimal(maxWeightTextBox.Text),
-            //    user.Login, AfterDateTimePicker.Text, BeforeDateTimePicker.Text, ExerciseNameLabel.Text);
-            //    this.DayListBox.DisplayMember = dataTable.Columns[0].ToString();
-            //    this.DayListBox.ValueMember = dataTable.Columns[0].ToString();
-            //    this.DayListBox.DataSource = dataTable;
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    System.Windows.Forms.MessageBox.Show(ex.Message);
-            //}
+            foreach (var wpd in workoutPlusDay)
+                workoutsListView.Items.Add(new ListViewItem(new[] { wpd.day.ToString(), wpd.workout }));
+
+            this.wereFoundLabel.Text = "Знайдено :" + workoutsListView.Items.Count;
+            this.workoutsListView.Columns[0].Width = -1;
         }
 
         private void GetExerciseButton_Click(object sender, EventArgs e)
@@ -240,9 +241,9 @@ namespace Gym_Planner_EF
 
         private void DayListBox_DoubleClick(object sender, EventArgs e)
         {
-            if (this.DayListBox.SelectedItems.Count == 1)
+            if (this.workoutsListView.SelectedItems.Count == 1)
             {
-                DateTime date = Convert.ToDateTime((DayListBox.SelectedItem));
+                DateTime date = Convert.ToDateTime((workoutsListView.SelectedItems[0].Text));
                 var day = (from d in ctx.Days.Where(d => d.Users.Any(u => u.Login == user.Login) && d.Date == date) select d).SingleOrDefault();
                 DayForm dayForm = new DayForm(day.Date.ToString(), day.ID_Day);
                 dayForm.Show();

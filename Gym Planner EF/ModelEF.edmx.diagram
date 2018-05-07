@@ -4,13 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="fe87e2ab509c430f8942f515cd870612" Name="Diagram1">
-        <EntityTypeShape EntityType="NewGymPlannerModel.Days" Width="1.5" PointX="1.625" PointY="1" IsExpanded="true" />
+      <Diagram DiagramId="2e1186ae8e1e498cb46e6f79179bf2ca" Name="Diagram1">
+        <EntityTypeShape EntityType="NewGymPlannerModel.Days" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Exercises" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.MuscleGroups" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Sets" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="NewGymPlannerModel.Users" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="NewGymPlannerModel.Workouts" Width="1.5" PointX="5.625" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NewGymPlannerModel.Workouts" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="NewGymPlannerModel.Day_Workout" ManuallyRouted="false" />
         <AssociationConnector Association="NewGymPlannerModel.Exercise_MuscleGroup" ManuallyRouted="false" />
         <AssociationConnector Association="NewGymPlannerModel.User_Day" ManuallyRouted="false" />
